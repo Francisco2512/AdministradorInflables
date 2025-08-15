@@ -1,0 +1,105 @@
+/* form.formulario {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input {
+  padding: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+.ml-2 {
+  margin-left: 8px; 
+} */
+ form.formulario {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 20px;
+}
+
+input {
+  padding: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+.ml-2 {
+  margin-left: 24px; 
+}
+@media (max-width: 800px) {
+  form.formulario {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  input, select, button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .ml-2 {
+    margin-left: 0;
+  }
+
+ @media (max-width: 800px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+    font-size: 20px;
+  }
+
+  th, td {
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+ }
+
+  button {
+    font-size: 1rem;
+  }
+}

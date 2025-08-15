@@ -1,0 +1,56 @@
+/* Estilo general del calendario */
+:host {
+  display: block;
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #fefefe;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.fc {
+  font-size: 14px;
+}
+
+
+.fc .fc-event {
+  white-space: normal !important;
+  height: auto !important;
+  padding: 8px;
+  border-radius: 12px;
+  background-color: #e0f2fe; 
+  border: 1px solid #90cdf4;
+  color: #1e3a8a;
+  font-weight: 500;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+
+.fc .fc-daygrid-day-frame {
+  min-height: 120px;
+}
+
+.fc .fc-daygrid-day-number {
+  font-weight: bold;
+  font-size: 13px;
+  color: #555;
+}
+.fc .fc-event {
+  padding: 6px;
+  border-radius: 10px;
+  background-color: #e0f7fa;
+  border: 1px solid #81d4fa;
+  color: #006064;
+  font-size: 13px;
+  white-space: normal !important;
+  height: auto !important;
+  text-align: center;
+}

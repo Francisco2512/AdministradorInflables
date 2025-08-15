@@ -1,0 +1,102 @@
+<!-- <div class="container py-4">
+  <h2 class="text-center text-primary mb-5">🎉 Inflables Disponibles 🎈</h2>
+
+  <div *ngIf="inflables.length === 0" class="text-center text-muted">
+    Cargando inflables...
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div *ngFor="let inflable of inflables" class="col">
+      <div class="card h-100 border-0 shadow rounded-4 overflow-hidden">
+
+        <img
+          [src]="inflable.thumb"
+          [alt]="inflable.title"
+          class="card-img-top"
+          style="height: 220px; object-fit: cover;"
+        />
+
+
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="card-title text-primary mb-0">{{ inflable.title }}</h2>
+            <span class="badge bg-warning text-dark text-uppercase">{{ inflable.category }}</span>
+          </div>
+
+          <p class="card-text text-muted">
+            {{ inflable.description | slice: 0:150 }}...
+          </p>
+
+          <ul class="list-unstyled mb-3">
+            <li *ngFor="let d of inflable.detail" class="mb-1 d-flex align-items-center">
+              <i class="fa me-2 text-warning" [ngClass]="d.icon"></i>
+              <strong class="me-1">{{ d.label }}:</strong> {{ d.value }}
+            </li>
+          </ul>
+
+          <a [href]="inflable.link" target="_blank" class="btn btn-outline-primary mt-auto w-100">
+            Agendar
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ -->
+<!-- <div class="container py-4">
+  <h2 class="text-center text-primary mb-5">🎉 Inflables Disponibles 🎈</h2>
+@if (inflables.length === 0) {
+    <div class="text-center text-muted">
+    Cargando inflables...
+  </div>
+}
+
+<div class="row">
+
+    @for (inflable of inflables; track $index) {
+      <div class="col-12 col-sm-6 col-md-4 mb-3">
+    <div class="card">
+      <img class="card-img-top p-2" [src]="inflable.thumb" alt="Card image cap"> -->
+      <!-- <img [src]="inflable.thumb" [alt]="inflable.title" class="card-img-top"
+        style="height: 220px; object-fit: cover;" /> -->
+      <!-- <div class="card-body">
+        <h5 class="card-title">{{inflable.title}}</h5>
+        <p class="card-text">{{ inflable.description}}...</p>
+         <a [routerLink]="['/reservaciones']" class="btn btn-primary">Reservar</a>
+      </div>
+    </div>
+      </div>
+}
+  </div>
+</div> -->
+<div class="container py-4">
+  <h2 class="text-center text-primary mb-5">🎉 Inflables Disponibles 🎈</h2>
+
+  @if (inflables.length === 0) {
+    <div class="text-center text-muted">
+      Cargando inflables...
+    </div>
+  }
+
+  <div class="row">
+    @for (inflable of inflables; track $index) {
+      <div class="col-12 col-sm-6 col-md-4 mb-3">
+        <div class="card">
+          <img class="card-img-top p-2" [src]="inflable.thumb" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{ inflable.title }}</h5>
+            <p class="card-text">{{ inflable.description }}...</p>
+            <!-- Pasar inflable por query params -->
+            <a [routerLink]="['/reservaciones']" 
+               [queryParams]="{ inflable: inflable.title }"
+               class="btn btn-primary">
+               Reservar
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

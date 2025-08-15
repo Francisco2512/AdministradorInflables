@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "real-courses"
+  },
+  "targets": {
+    "real-courses": {
+      "hosting": {
+        "adminchikiparty": [
+          "adminchikiparty"
+        ]
+      }
+    }
+  }
+}
