@@ -1,0 +1,1 @@
+import{a as o}from"./chunk-RKB6RUOW.js";import"./chunk-TGBSWPH5.js";import"./chunk-WT43QH4Z.js";import"./chunk-DFYDKIUI.js";var n=[{path:"",loadComponent:()=>import("./chunk-CFRNIZPE.js").then(t=>t.ReservacionesComponent),canActivate:[o]}];export{n as RESERVACIONES_ROUTES};

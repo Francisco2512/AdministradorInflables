@@ -1,145 +1,31 @@
-<!-- <h2>Crear Reservación</h2>
-<div class="col-12 col-sm-6 col-md-4 mb-3">
-  <form (ngSubmit)="editarId === null ? agregar() : actualizar()" class="formulario">
-    <input type="text" [(ngModel)]="nueva.cliente" name="cliente" placeholder="Cliente" required />
-    <input type="text" [(ngModel)]="nueva.telefono" name="telefono" placeholder="Telefono" required />
-
-    <select [(ngModel)]="nueva.inflable" name="inflable" required>
-      <option value="" disabled selected>Selecciona un inflable</option>
-      <option *ngFor="let inflable of inflables" [value]="inflable.title">
-        {{ inflable.title }}
-      </option>
-    </select>
-
-    <input type="date" [(ngModel)]="nueva.fecha" name="fecha" required />
-
-    <input type="text" [(ngModel)]="nueva.domicilio" name="domicilio" placeholder="Domicilio (dirección)" />
-
-    <input type="text" [(ngModel)]="nueva.maps" name="maps" placeholder="Maps (link)" />
-
-    <input type="number" [(ngModel)]="nueva.pago" name="pago" placeholder="Pago" />
-
-    <button type="submit">
-      {{ editarId === null ? 'Agregar' : 'Actualizar' }}
-    </button>
-  </form>
-</div>
-
-<hr />
-
-<h2>Próximos Eventos</h2>
-<div class="col-12 col-sm-8 col-md-4 mb-3">
-  <table>
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Telefono</th>
-        <th>Inflable</th>
-        <th>Fecha</th>
-        <th>Domicilio</th>
-        <th>Maps</th>
-        <th>Pago</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let r of reservacionesOrdenadas">
-        <td>{{ r.cliente }}</td>
-        <td>{{r.telefono}}</td>
-        <td>{{ r.inflable }}</td>
-        <td>{{ r.fecha | date: 'dd/MM/yyyy' }}</td>
-        <td>
-          <a [href]="r.domicilio" target="_blank">{{ r.domicilio}}</a>
-        </td>
-        <td>
-          <a *ngIf="r.maps" [href]="r.maps" target="_blank">Ver mapa</a>
-        </td>
-        <td>{{ r.pago }}</td>
-        <td>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" (click)="eliminar(r.id!)">Eliminar</button>
-            <button type="button" (click)="editar(r)">Editar</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div> -->
-
-
-<!-- <h2>Crear Reservación</h2>
-<div class="col-12 col-sm-6 col-md-4 mb-3">
-  <form (ngSubmit)="editarId === null ? agregar() : actualizar()" class="formulario">
-    <input type="text" [(ngModel)]="nueva.cliente" name="cliente" placeholder="Cliente" required />
-    <input type="text" [(ngModel)]="nueva.telefono" name="telefono" placeholder="Telefono" required />
-
-    <select [(ngModel)]="nueva.inflable" name="inflable" required>
-      <option value="" disabled selected>Selecciona un inflable</option>
-      <option *ngFor="let inflable of inflables" [value]="inflable.title">
-        {{ inflable.title }}
-      </option>
-    </select>
-
-    <input type="date" [(ngModel)]="nueva.fecha" name="fecha" required />
-
-    <input type="text" [(ngModel)]="nueva.domicilio" name="domicilio" placeholder="Domicilio (dirección)" />
-
-    <input type="text" [(ngModel)]="nueva.maps" name="maps" placeholder="Maps (link)" />
-
-    <input type="number" [(ngModel)]="nueva.pago" name="pago" placeholder="Pago" />
-
-    <button type="submit">
-      {{ editarId === null ? 'Agregar' : 'Actualizar' }}
-    </button>
-  </form>
-</div>
-
-<hr />
-
-<h2>Próximos Eventos</h2>
-<div class="col-12 col-sm-8 col-md-4 mb-3">
-  <table>
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Telefono</th>
-        <th>Inflable</th>
-        <th>Fecha</th>
-        <th>Domicilio</th>
-        <th>Maps</th>
-        <th>Pago</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let r of reservacionesOrdenadas">
-        <td>{{ r.cliente }}</td>
-        <td>{{r.telefono}}</td>
-        <td>{{ r.inflable }}</td>
-        <td>{{ r.fecha | date: 'dd/MM/yyyy' }}</td>
-        <td>
-          <a [href]="r.domicilio" target="_blank">{{ r.domicilio}}</a>
-        </td>
-        <td>
-          <a *ngIf="r.maps" [href]="r.maps" target="_blank">Ver mapa</a>
-        </td>
-        <td>{{ r.pago }}</td>
-        <td>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" (click)="eliminar(r.id!)">Eliminar</button>
-            <button type="button" (click)="editar(r)">Editar</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div> -->
 <h2>Crear Reservación</h2>
 <div class="col-12 col-sm-6 col-md-4 mb-3">
   <form (ngSubmit)="editarId === null ? agregar() : actualizar()" class="formulario">
-    <input type="text" [(ngModel)]="nueva.numerocontrato" name="numero de contrato" placeholder="Numero de contrato" required />
-    <input type="text" [(ngModel)]="nueva.cliente" name="cliente" placeholder="Cliente" required />
-    <input type="text" [(ngModel)]="nueva.telefono" name="telefono" placeholder="Telefono" required />
+    <input 
+      type="text" 
+      [(ngModel)]="nueva.numerocontrato" 
+      name="numerocontrato" 
+      placeholder="Número de contrato" 
+      required 
+    />
+
+    <input 
+      type="text" 
+      [(ngModel)]="nueva.cliente" 
+      name="cliente" 
+      placeholder="Cliente" 
+      required 
+    />
+
+    <input 
+  type="text" 
+  [(ngModel)]="nueva.telefono" 
+  name="telefono" 
+  placeholder="Teléfono" 
+  required 
+  maxlength="10"
+  pattern="[0-9]*"
+/>
 
     <select [(ngModel)]="nueva.inflable" name="inflable" required>
       <option value="" disabled selected>Selecciona un inflable</option>
@@ -148,13 +34,33 @@
       </option>
     </select>
 
-    <input type="date" [(ngModel)]="nueva.fecha" name="fecha" required />
+    <input 
+      type="date" 
+      [(ngModel)]="nueva.fecha" 
+      name="fecha" 
+      required 
+    />
 
-    <input type="text" [(ngModel)]="nueva.domicilio" name="domicilio" placeholder="Domicilio (dirección)" />
+    <input 
+      type="text" 
+      [(ngModel)]="nueva.domicilio" 
+      name="domicilio" 
+      placeholder="Domicilio (dirección)" 
+    />
 
-    <input type="text" [(ngModel)]="nueva.maps" name="maps" placeholder="Maps (link)" />
+    <input 
+      type="text" 
+      [(ngModel)]="nueva.maps" 
+      name="maps" 
+      placeholder="Maps (link)" 
+    />
 
-    <input type="number" [(ngModel)]="nueva.pago" name="pago" placeholder="Pago" />
+    <input 
+      type="number" 
+      [(ngModel)]="nueva.pago" 
+      name="pago" 
+      placeholder="Pago" 
+    />
 
     <button type="submit">
       {{ editarId === null ? 'Agregar' : 'Actualizar' }}
@@ -165,13 +71,28 @@
 <hr />
 
 <h2>Próximos Eventos</h2>
-<div class="col-12 col-sm-8 col-md-4 mb-3">
-  <table>
+<div class="filtro-contenedor mb-3">
+  <input 
+    type="date" 
+    [(ngModel)]="filtroFecha" 
+    class="form-control filtro-fecha" 
+  />
+  <button 
+    type="button" 
+    (click)="limpiarFiltro()" 
+    class="btn btn-secondary filtro-btn"
+  >
+    Limpiar
+  </button>
+</div>
+
+<div class="tabla-responsive">
+  <table class="table">
     <thead>
       <tr>
-        <th>Numero de Contrato</th>
+        <th>Número de Contrato</th>
         <th>Cliente</th>
-        <th>Telefono</th>
+        <th>Teléfono</th>
         <th>Inflable</th>
         <th>Fecha</th>
         <th>Domicilio</th>
@@ -181,24 +102,22 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let r of reservacionesOrdenadas">
-        <td>{{r.numerocontrato}}</td>
+      <tr *ngFor="let r of filtradasPorFecha()">
+        <td>{{ r.numerocontrato }}</td>
         <td>{{ r.cliente }}</td>
-        <td>{{r.telefono}}</td>
+        <td>{{ r.telefono }}</td>
         <td>{{ r.inflable }}</td>
         <td>{{ r.fecha | date: 'dd/MM/yyyy' }}</td>
-        <td>
-          <a [href]="r.domicilio" target="_blank">{{ r.domicilio}}</a>
-        </td>
+        <td>{{ r.domicilio }}</td>
         <td>
           <a *ngIf="r.maps" [href]="r.maps" target="_blank">Ver mapa</a>
         </td>
         <td>{{ r.pago }}</td>
         <td>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" (click)="eliminar(r.id!)">Eliminar</button>
-            <button type="button" (click)="editar(r)">Editar</button>
-            <button type="button" (click)="generarContrato(r)">Contrato PDF</button>
+          <div class="d-flex gap-2">
+            <button type="button" (click)="eliminar(r.id!)" class="btn btn-danger btn-sm">Eliminar</button>
+            <button type="button" (click)="editar(r)" class="btn btn-warning btn-sm">Editar</button>
+            <button type="button" (click)="generarContrato(r)" class="btn btn-primary btn-sm">Contrato PDF</button>
           </div>
         </td>
       </tr>

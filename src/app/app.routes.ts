@@ -1,11 +1,15 @@
 import { Routes } from '@angular/router';
-import { ReservacionesComponent } from './reservaciones/reservaciones.component';
-
+import { LoginComponent } from './login/login.component';
+import { authGuard } from './guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'inflables',
+    redirectTo: 'login',
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: 'inflables',

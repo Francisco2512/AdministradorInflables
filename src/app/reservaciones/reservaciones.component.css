@@ -1,105 +1,171 @@
-/* form.formulario {
+body {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  margin: 0;
+  padding: 0;
+  background: #f8f9fa;
+}
+
+/* ========== Formulario ========== */
+form.formulario {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
 }
 
-input {
-  padding: 0.5rem;
+/* Campos comunes */
+form.formulario input,
+form.formulario select,
+form.formulario button,
+.btn {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
-button {
-  padding: 0.5rem 1rem;
+/* Campo de fecha más compacto */
+form.formulario input[type="date"] {
+  width: 140px !important;   /* más angosto */
+  height: 32px !important;   /* más bajo */
+  padding: 0.2rem 0.4rem !important;
+  font-size: 0.85rem !important;
+}
+
+/* Icono calendario */
+form.formulario input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  transform: scale(0.8); /* hace más pequeño el ícono */
+}
+
+/* Botones */
+form.formulario button,
+.btn {
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-button:hover {
+form.formulario button:hover,
+.btn:hover {
   background-color: #0056b3;
 }
+.filtro-contenedor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* espacio entre input y botón */
+  margin-bottom: 1rem;
+}
 
+.filtro-fecha {
+  width: auto !important;   /* 🚀 forzamos a no ser 100% */
+  max-width: 180px;         /* tamaño máximo */
+  flex: 0 0 auto;           /* evita que se expanda */
+}
+
+.filtro-btn {
+  flex: 0 0 ;
+}
+
+/* ========== Tabla ========== */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  font-size: 1rem;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
-}
-.ml-2 {
-  margin-left: 8px; 
-} */
- form.formulario {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  font-size: 20px;
-}
-
-input {
-  padding: 0.5rem;
-}
-
-button {
-  padding: 0.5rem 1rem;
+th {
   background-color: #007bff;
   color: white;
+  text-align: left;
+  padding: 1.2rem;         /* más aire en encabezados */
+}
+
+td {
+  border-top: 1px solid #ddd;
+  padding: 1.2rem;         /* más espacio en celdas */
+  vertical-align: middle;
+}
+
+td a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+}
+
+/* Botones de acción en tabla */
+td button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+td button:nth-child(1) {
+  background-color: #dc3545;
+  color: white;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  font-size: 20px;
+td button:nth-child(1):hover {
+  background-color: #c82333;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
+td button:nth-child(2) {
+  background-color: #ffc107;
+  color: #212529;
 }
-.ml-2 {
-  margin-left: 24px; 
+
+td button:nth-child(2):hover {
+  background-color: #e0a800;
 }
+
+td button:nth-child(3) {
+  background-color: #17a2b8;
+  color: white;
+}
+
+td button:nth-child(3):hover {
+  background-color: #138496;
+}
+
+/* ========== Responsive ========== */
 @media (max-width: 800px) {
   form.formulario {
     flex-direction: column;
-    gap: 0.75rem;
   }
 
   input, select, button {
     width: 100%;
-    box-sizing: border-box;
   }
 
-  .ml-2 {
-    margin-left: 0;
-  }
-
- @media (max-width: 800px) {
-  table {
-    display: block;
-    overflow-x: auto;
+  /* Contenedor para tabla en móvil */
+  .tabla-responsive {
     width: 100%;
-    font-size: 20px;
+    overflow-x: auto;   /* activa scroll horizontal */
+    -webkit-overflow-scrolling: touch; /* scroll suave en iOS */
+  }
+
+  table {
+    min-width: 700px;   /* evita que se comprima demasiado */
+    font-size: 0.9rem;
   }
 
   th, td {
-    white-space: nowrap;
-    font-size: 0.85rem;
-  }
- }
-
-  button {
-    font-size: 1rem;
+    white-space: nowrap; /* evita que se rompan las celdas */
+    padding: 0.6rem;     /* un poco más compacto en móvil */
   }
 }
