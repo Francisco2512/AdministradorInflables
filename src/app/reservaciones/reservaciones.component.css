@@ -1,3 +1,61 @@
+.dashboard-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.card {
+  flex: 1 1 250px; 
+  min-width: 250px; 
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+  margin: 10px 0; 
+}
+.card-body span.icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: inherit; 
+  color: white; 
+  font-size: 1.6rem;
+}
+
+.card-body {
+  padding: 1rem 1.5rem;
+}
+
+.card-body span {
+  font-weight: 600;
+  font-size: 1.2rem; 
+}
+
+.card-body i {
+  font-size: 1.6rem; 
+  color: #444;
+}
+
+.card-body h2 {
+  margin-top: 12px;
+  font-size: 2.4rem; 
+  font-weight: 700;
+}
+
+.card.completadas { border-top: 4px solid #28a745; }
+.card.completadas .icon-wrapper { background-color: #28a745; }
+.card.completadas h2 { color: #28a745; } 
+
+.card.pendientes { border-top: 4px solid #fd7e14; }
+.card.pendientes .icon-wrapper { background-color: #fd7e14; }
+.card.pendientes h2 { color: #fd7e14; }
+
+.card.ingresos h2 { 
+  color: #007bff; }     
+
 body {
   font-family: 'Segoe UI', sans-serif;
   font-size: clamp(1rem, 2vw, 1.1rem);
@@ -5,8 +63,12 @@ body {
   padding: 0;
   background: #f8f9fa;
 }
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-/* ========== Formulario ========== */
 form.formulario {
   display: flex;
   flex-direction: column;
@@ -14,7 +76,7 @@ form.formulario {
   padding: 1rem;
 }
 
-/* Campos comunes */
+
 form.formulario input,
 form.formulario select,
 form.formulario button,
@@ -27,73 +89,163 @@ form.formulario button,
   box-sizing: border-box;
 }
 
-/* Campo de fecha más compacto */
+
 form.formulario input[type="date"] {
-  width: 140px !important;   /* más angosto */
-  height: 32px !important;   /* más bajo */
+  width: 140px !important;   
+  height: 32px !important;   
   padding: 0.2rem 0.4rem !important;
   font-size: 0.85rem !important;
 }
 
-/* Icono calendario */
+
 form.formulario input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  transform: scale(0.8); /* hace más pequeño el ícono */
+  transform: scale(1); 
 }
 
-/* Botones */
+
 form.formulario button,
 .btn {
+  display: inline-flex;       
+  align-items: center;        
+  justify-content: center;    
+  text-align: center;
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  width: auto; 
 }
+
 
 form.formulario button:hover,
 .btn:hover {
   background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-.filtro-contenedor {
+
+.boton-crear {
+  background: linear-gradient(90deg, #F99069, #85e085); 
+  color: white;                                       
+  font-size: 1.3rem;                                 
+  padding: 1rem 1.5rem;                            
+  border: none;
+  border-radius: 8px;                                 
+  cursor: pointer;
+  transition: all 0.3s ease;
+   display: flex;          
+  align-items: center;    
+  justify-content: center; 
+  text-align: center;
+   min-height: 45px;   
+}
+
+.boton-crear:hover {
+  background: linear-gradient(90deg, #1e7e34, #66bb66); 
+  transform: translateY(-2px);                          
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);           
+}
+
+.filtros-container {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 0.5rem; /* espacio entre input y botón */
+  gap: 8px;
   margin-bottom: 1rem;
+}
+.input-busqueda-container {
+  flex: 3;               
+  position: relative;     
+}
+
+.input-busqueda-container .icono-busqueda {
+  position: absolute;
+  left: 10px;           
+  top: 50%;              
+  transform: translateY(-50%);
+  color: #495057;        
+  font-size: 1.1rem;
+  pointer-events: none;  
+}
+.filtros-container input.filtro-busqueda {
+  flex: 3;       
+  min-width: 200px;
+}
+.input-busqueda-container input.filtro-busqueda {
+  padding-left: 35px;   
+}
+
+.filtros-container input.filtro-fecha,
+.filtros-container select.filtro-estado {
+  flex: 1;       
+  min-width: 120px;
+}
+
+.filtros-container button {
+  white-space: nowrap;
 }
 
 .filtro-fecha {
-  width: auto !important;   /* 🚀 forzamos a no ser 100% */
-  max-width: 180px;         /* tamaño máximo */
-  flex: 0 0 auto;           /* evita que se expanda */
+  width: auto !important;   
+  max-width: 180px;         
+  flex: 0 0 auto;           
+}
+.filtro-estado-container {
+  flex: 1;
+}
+
+.filtro-estado-container .icono-filtro {
+  right: 10px;       
+  top: 50%;         
+  transform: translateY(-50%);
+  pointer-events: none; 
+  color: #495057;    
+  font-size: 1rem;
+  position: absolute;
 }
 
 .filtro-btn {
   flex: 0 0 ;
 }
 
-/* ========== Tabla ========== */
+
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+  width: calc(100% - 2rem); 
+  margin: 1rem auto;         
+  border-collapse: collapse; 
   background-color: #fff;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   font-size: 1rem;
 }
-
-th {
-  background-color: #007bff;
-  color: white;
-  text-align: left;
-  padding: 1.2rem;         /* más aire en encabezados */
+td.actions-cell {
+  display: flex;
+  flex-wrap: wrap;       
+  gap: 4px;              
+  justify-content: center; 
 }
 
-td {
-  border-top: 1px solid #ddd;
-  padding: 1.2rem;         /* más espacio en celdas */
+th, td {
+  padding: 1.2rem;
+  text-align: center;
   vertical-align: middle;
+  border: none; 
+}
+
+tr + tr td {
+  border-top: 1px solid #ddd; 
+}
+
+th {
+  background-color: #fff;
+  color: #7B899D;
 }
 
 td a {
@@ -104,45 +256,147 @@ td a {
 td a:hover {
   text-decoration: underline;
 }
-
-/* Botones de acción en tabla */
 td button {
-  padding: 0.4rem 0.8rem;
+  flex: 0 0 auto;
+  padding: 0.3rem 0.6rem;
   font-size: 0.85rem;
-  border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  border: 1px solid #ddd;  
+  background: #fff;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
-td button:nth-child(1) {
-  background-color: #dc3545;
-  color: white;
+td button:last-child {
+  margin-right: 0;
 }
 
 td button:nth-child(1):hover {
-  background-color: #c82333;
-}
-
-td button:nth-child(2) {
   background-color: #ffc107;
-  color: #212529;
+  color: white;
 }
 
 td button:nth-child(2):hover {
-  background-color: #e0a800;
-}
-
-td button:nth-child(3) {
-  background-color: #17a2b8;
+  background-color: #ffc107;
   color: white;
 }
 
 td button:nth-child(3):hover {
-  background-color: #138496;
+  background-color: #ffc107;
+  color: white;
+}
+td button:nth-child(4):hover {
+  background-color: #ffc107;
+  color: white;
 }
 
-/* ========== Responsive ========== */
+.estado-completado {
+  background-color: #1DC964; 
+  color: white;            
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: 600;
+  text-align: center;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.estado-pendiente {
+  background-color: #FB9851 ; 
+  color: white;            
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: 600;
+  text-align: center;
+  display: inline-block;
+  min-width: 80px;
+}
+
+
+
+@media (max-width: 1000px) {
+  .dashboard-cards {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+
+  form.formulario button,
+  .btn {
+    width: 100% !important;
+  }
+
+
+  .filtros-container {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input-busqueda-container,
+  .filtro-fecha,
+  .filtro-estado-container,
+  .filtro-btn {
+    width: 100% !important;
+    min-width: unset;
+  }
+
+
+ .tabla-responsive {
+  width: 100%;
+  overflow-x: auto;         
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  font-size: 1rem;
+}
+  th, td {
+  padding: 1rem;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap; 
+  }
+
+th {
+  background-color: #fff;
+  color: #7B899D;
+}
+
+td a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+}
+}
+ 
+
+td button {
+  flex: 0 0 auto;         
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: transparent;
+  color: inherit;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin: 0;
+}
+td button:hover {
+  background-color: #ffc107;
+  color: #fff;
+}
+
 @media (max-width: 800px) {
   form.formulario {
     flex-direction: column;
@@ -152,20 +406,83 @@ td button:nth-child(3):hover {
     width: 100%;
   }
 
-  /* Contenedor para tabla en móvil */
+
   .tabla-responsive {
     width: 100%;
-    overflow-x: auto;   /* activa scroll horizontal */
-    -webkit-overflow-scrolling: touch; /* scroll suave en iOS */
+    overflow-x: auto;   
+    -webkit-overflow-scrolling: touch; 
   }
 
   table {
-    min-width: 700px;   /* evita que se comprima demasiado */
+    min-width: 700px;   
     font-size: 0.9rem;
   }
 
   th, td {
-    white-space: nowrap; /* evita que se rompan las celdas */
-    padding: 0.6rem;     /* un poco más compacto en móvil */
+    white-space: nowrap; 
+    padding: 0.6rem;     
+  }
+}
+/* RESPONSIVE: tablet y móvil */
+@media (max-width: 992px) {
+  .dashboard-cards {
+    gap: 0.75rem;
+  }
+
+  .card {
+    flex: 1 1 200px;
+    min-width: 200px;
+    margin: 8px 0;
+  }
+
+  .card-body span.icon-wrapper {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+
+  .card-body span {
+    font-size: 1rem;
+  }
+
+  .card-body i {
+    font-size: 1.4rem;
+  }
+
+  .card-body h2 {
+    font-size: 2rem;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-cards {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card {
+    flex: 1 1 100%;
+    min-width: 100%;
+    margin: 6px 0;
+  }
+
+  .card-body span.icon-wrapper {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+
+  .card-body span {
+    font-size: 0.95rem;
+  }
+
+  .card-body i {
+    font-size: 1.2rem;
+  }
+
+  .card-body h2 {
+    font-size: 1.8rem;
+    margin-top: 8px;
   }
 }

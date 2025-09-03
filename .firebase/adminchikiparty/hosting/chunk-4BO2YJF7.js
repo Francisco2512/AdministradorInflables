@@ -1,1 +1,0 @@
-import{a as o}from"./chunk-RKB6RUOW.js";import"./chunk-TGBSWPH5.js";import"./chunk-WT43QH4Z.js";import"./chunk-DFYDKIUI.js";var n=[{path:"",loadComponent:()=>import("./chunk-3RVCDQ5U.js").then(t=>t.CalendarioComponent),canActivate:[o]}];export{n as CALENDARIO_ROUTES};

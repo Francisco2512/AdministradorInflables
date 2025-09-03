@@ -400,115 +400,275 @@
 //   fecha: string;
 //   domicilio: string;
 // }
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { InflablesService } from '../service/Inflables.service';
 import { ReservacionesService } from './reservaciones.service';
-import { CommonModule, DatePipe } from '@angular/common';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import Swal from 'sweetalert2';
 import { LOGO_BASE64 } from './logo';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { firstValueFrom } from 'rxjs';
+import { ModalInflableService } from '../service/modal-inflable-service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import 'pdfmake/build/vfs_fonts';
-import Swal from 'sweetalert2';
 
 export interface Reservacion {
   id?: string;
   numerocontrato: string;
   cliente: string;
   telefono: string;
-  inflable: string;
+  inflable: string[];
   fecha: string;
+  horadeinicio: string;
   domicilio: string;
   maps?: string;
-  pago: string;
+  pago: number;
+  estado?: 'pendiente' | 'completado'; 
 }
 
 @Component({
   selector: 'app-reservaciones',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, HttpClientModule, DatePipe],
+  imports: [
+    FormsModule, ReactiveFormsModule, CommonModule, NgFor, HttpClientModule,
+    NzSelectModule, NzDatePickerModule, NzTimePickerModule, NzIconModule,
+    NzInputModule, NzFormModule, NzButtonModule, NzModalModule
+  ],
   templateUrl: './reservaciones.component.html',
   styleUrls: ['./reservaciones.component.css']
 })
 export class ReservacionesComponent implements OnInit {
+  isVisible = false;
+
   inflables: any[] = [];
   reservaciones: Reservacion[] = [];
+  inflablesCargados = false;
 
   nueva: Reservacion = {
     numerocontrato: '',
     cliente: '',
     telefono: '',
-    inflable: '',
+    inflable: [],
     fecha: '',
+    horadeinicio: '',
     domicilio: '',
     maps: '',
-    pago: ''
+    pago: 0
   };
+
   filtroFecha: string = '';
   editarId: string | null = null;
+  startValue?: Date | null = null;
+  endValue?: Date | null = null;
+  filtroEstado: string = '';
+  filtroBusqueda: string= '';
 
   constructor(
     private inflablesService: InflablesService,
+    private modalService: ModalInflableService,
+    private cd: ChangeDetectorRef,
     private reservacionesServices: ReservacionesService,
     private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    this.inflablesService.getInflables().subscribe(data => {
-      this.inflables = data;
-      const inflableParam = this.route.snapshot.queryParamMap.get('inflable');
-      if (inflableParam) this.nueva.inflable = inflableParam;
+ngOnInit(): void {
+
+  this.inflablesService.getInflables().subscribe(data => {
+    this.inflables = data;
+
+   
+    this.modalService.inflable$.subscribe(async inf => {
+      if (inf) {
+        const seleccionado = this.inflables.find(i => i.title === inf);
+        if (seleccionado) this.nueva.inflable = [seleccionado.title];
+
+
+        await this.cargarReservaciones();
+
+
+        this.generarNumeroContrato();  
+        this.isVisible = true;
+        this.cd.detectChanges();
+      }
     });
+
+  
+    (async () => {
+      const inflableParam = this.route.snapshot.queryParamMap.get('inflable');
+      if (inflableParam) {
+        const seleccionado = this.inflables.find(i => i.title === inflableParam);
+        if (seleccionado) this.nueva.inflable = [seleccionado.title];
+
+        await this.cargarReservaciones();
+        this.generarNumeroContrato();
+        this.isVisible = true;
+        this.cd.detectChanges();
+      }
+    })();
     this.cargarReservaciones();
+
+  });
+}
+
+
+generarNumeroContrato() {
+    if (this.reservaciones.length === 0) {
+      this.nueva.numerocontrato = '1';
+      return;
+    }
+    const numeros = this.reservaciones.map(r => Number(r.numerocontrato)).filter(n => !isNaN(n));
+    const max = Math.max(...numeros);
+    this.nueva.numerocontrato = (max + 1).toString();
   }
 
-  async cargarReservaciones(): Promise<void> {
-    try {
-      this.reservaciones = await this.reservacionesServices.obtenerReservaciones();
-    } catch (error) {
-      console.error('Error al cargar reservaciones', error);
-      Swal.fire('Error', 'No se pudieron cargar las reservaciones', 'error');
+
+ async showModal() {
+  try {
+    if (!this.inflables || this.inflables.length === 0) {
+      const inflablesData = await firstValueFrom(this.inflablesService.getInflables());
+      this.inflables = inflablesData;
     }
+
+   
+    await this.cargarReservaciones();
+
+
+    if (this.editarId === null) {
+      this.generarNumeroContrato(); 
+      this.nueva = {
+        numerocontrato: this.nueva.numerocontrato, 
+        cliente: '',
+        telefono: '',
+        inflable: [],
+        fecha: '',
+        horadeinicio: '',
+        domicilio: '',
+        maps: '',
+        pago: 0
+      };
+    }
+
+    this.cd.detectChanges();
+    this.isVisible = true;
+
+  } catch (error) {
+    console.error('Error al cargar inflables o reservaciones:', error);
   }
+}
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+
+async cargarReservaciones(): Promise<void> {
+  try {
+    const data = await this.reservacionesServices.obtenerReservaciones();
+    this.reservaciones = data.map(r => ({
+      ...r,
+      inflable: Array.isArray(r.inflable) ? r.inflable : [r.inflable],
+      estado: r.estado || 'pendiente'
+    }));
+
+    this.actualizarEstadosAutomaticamente();
+  } catch (error) {
+    console.error('Error al cargar reservaciones', error);
+    Swal.fire('Error', 'No se pudieron cargar las reservaciones', 'error');
+  }
+}
+  actualizarEstadosAutomaticamente() {
+  const hoy = new Date();
+  this.reservaciones.forEach(reservacion => {
+    const fechaReservacion = new Date(reservacion.fecha);
+
+    
+    if (fechaReservacion < hoy && reservacion.estado !== 'completado') {
+      const nuevoEstado = 'completado'; 
+      reservacion.estado = nuevoEstado;
+
+      
+      if (reservacion.id) {
+        this.reservacionesServices.actualizarEstado(reservacion.id, nuevoEstado)
+          .then(() => console.log(`Estado de ${reservacion.cliente} actualizado a ${nuevoEstado}`))
+          .catch(err => console.error(err));
+      }
+    }
+  });
+}
+abrirMapa(url: string) {
+  window.open(url, '_blank');
+}
+marcarComoCompletado(reservacion: any) {
+  if (reservacion.estado !== 'completado') {
+    reservacion.estado = 'completado';
+    this.reservacionesServices.actualizarEstado(reservacion.id, 'completado')
+      .then(() => console.log('Estado actualizado'))
+      .catch((err: any) => console.error(err));
+  }
+}
+
 
   hayConflicto(): boolean {
     return this.reservaciones.some(r =>
-      r.inflable === this.nueva.inflable &&
       r.fecha === this.nueva.fecha &&
-      this.editarId === null
+      this.editarId === null &&
+      r.inflable.some(inf => this.nueva.inflable.includes(inf))
     );
   }
 
-  async agregar(): Promise<void> {
-    if (this.hayConflicto()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Reservación duplicada',
-        text: `⚠️ Ya hay una reservación para el inflable "${this.nueva.inflable}" en la fecha ${this.nueva.fecha}`,
-      });
-      return;
-    }
-
-    if (this.nueva.cliente && this.nueva.inflable && this.nueva.fecha) {
+  async agregar() {
+    if (this.nueva.cliente && this.nueva.inflable.length && this.nueva.fecha) {
       try {
         await this.reservacionesServices.guardarReservacion({ ...this.nueva });
         await this.cargarReservaciones();
-        this.nueva = { numerocontrato:'', cliente:'', telefono:'', inflable:'', fecha:'', domicilio:'', maps:'', pago:'' };
-        Swal.fire({ icon: 'success', title: '¡Reservación agregada!', text: 'La reservación fue guardada correctamente.', timer: 1500, showConfirmButton: false });
+
+        const ultimoContrato = Number(this.nueva.numerocontrato) + 1;
+        this.nueva = {
+          numerocontrato: String(ultimoContrato),
+          cliente: '',
+          telefono: '',
+          inflable: [],
+          fecha: '',
+          horadeinicio: '',
+          domicilio: '',
+          maps: '',
+          pago: 0
+        };
+
+        this.isVisible = false; 
+        Swal.fire({
+          icon: 'success',
+          title: '¡Reservación agregada!',
+          text: 'La reservación fue guardada correctamente.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       } catch (error) {
         console.error('Error al agregar reservación:', error);
         Swal.fire('Error', 'No se pudo guardar la reservación', 'error');
       }
     } else {
-      Swal.fire({ icon: 'error', title: 'Campos incompletos', text: 'Por favor, completa todos los campos antes de guardar.' });
+      Swal.fire({
+        icon: 'error',
+        title: 'Campos incompletos',
+        text: 'Por favor, completa todos los campos antes de guardar.'
+      });
     }
   }
 
   editar(reservacion: Reservacion) {
     this.nueva = { ...reservacion };
     this.editarId = reservacion.id ?? null;
+    this.isVisible = true;
   }
 
   async eliminar(id: string): Promise<void> {
@@ -534,6 +694,30 @@ export class ReservacionesComponent implements OnInit {
       }
     }
   }
+  contarCompletadas() {
+  return this.reservaciones.filter(r => r.estado === 'completado').length;
+}
+
+contarPendientes() {
+  return this.reservaciones.filter(r => r.estado === 'pendiente').length;
+}
+
+totalIngresos() {
+  const total = this.reservaciones.reduce((sum, r) => sum + (r.pago || 0), 0);
+  return total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+}
+
+totalCompletados() {
+  const total = this.reservaciones
+    .filter(r => r.estado === 'completado')
+    .reduce((sum, r) => sum + (r.pago || 0), 0);
+  return total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+}
+esPasada(fecha: string): boolean {
+  const hoy = new Date();
+  const fechaReservacion = new Date(fecha);
+  return fechaReservacion < hoy;
+}
 
   async actualizar(): Promise<void> {
     if (!this.editarId) return;
@@ -541,9 +725,26 @@ export class ReservacionesComponent implements OnInit {
       try {
         await this.reservacionesServices.actualizarReservacion(this.editarId, this.nueva);
         await this.cargarReservaciones();
-        this.nueva = { numerocontrato:'', cliente:'', telefono:'', inflable:'', fecha:'', domicilio:'', maps:'', pago:'' };
+        this.nueva = {
+          numerocontrato: '',
+          cliente: '',
+          telefono: '',
+          inflable: [],
+          fecha: '',
+          horadeinicio: '',
+          domicilio: '',
+          maps: '',
+          pago: 0
+        };
         this.editarId = null;
-        Swal.fire({ icon: 'success', title: '¡Reservación actualizada!', text: 'La reservación se ha actualizado correctamente.', timer: 1500, showConfirmButton: false });
+        this.isVisible = false;
+        Swal.fire({
+          icon: 'success',
+          title: '¡Reservación actualizada!',
+          text: 'La reservación se ha actualizado correctamente.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       } catch (error) {
         console.error('Error al actualizar reservación:', error);
         Swal.fire('Error', 'No se pudo actualizar la reservación', 'error');
@@ -551,37 +752,59 @@ export class ReservacionesComponent implements OnInit {
     }
   }
 
-  get reservacionesOrdenadas() {
-    return this.reservaciones.slice().sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
-  }
-
-  limpiarFiltro() {
-    this.filtroFecha = '';
-  }
-
-  filtradasPorFecha() {
-    if (!this.filtroFecha) return this.reservacionesOrdenadas;
-
-    return this.reservacionesOrdenadas.filter(r => {
+get reservacionesFiltradas() {
+  return this.reservaciones
+    .filter(r => {
+      const busqueda = this.filtroBusqueda?.toLowerCase() || '';
+      const coincidenciaBusqueda =
+        r.numerocontrato?.toLowerCase().includes(busqueda) ||
+        r.cliente?.toLowerCase().includes(busqueda) ||
+        r.telefono?.includes(busqueda) ||
+        r.domicilio?.toLowerCase().includes(busqueda);
+      return coincidenciaBusqueda;
+    })
+    .filter(r => {
+  if (!this.filtroEstado) return true; 
+  const estadoSeleccionado = this.filtroEstado.toLowerCase().trim();
+  const estadoReserva = (r.estado || '').toLowerCase().trim();
+  return estadoReserva.includes(estadoSeleccionado);
+})
+    .filter(r => {
+      if (!this.filtroFecha) return true;
       if (!r.fecha) return false;
       const fechaReservacion = new Date(r.fecha + 'T00:00:00');
       const yyyy = fechaReservacion.getFullYear();
       const mm = String(fechaReservacion.getMonth() + 1).padStart(2, '0');
       const dd = String(fechaReservacion.getDate()).padStart(2, '0');
       return `${yyyy}-${mm}-${dd}` === this.filtroFecha;
-    });
-  }
+    })
+   
+    .slice() 
+    .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+}
 
+limpiarFiltro() {
+  this.filtroBusqueda = '';
+  this.filtroEstado = '';
+  this.filtroFecha = '';
+}
 
-  formatearFecha(fecha: string): string {
+   formatearFecha(fecha: string): string {
     const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
     const [anio, mes, dia] = fecha.split('-');
     return `${parseInt(dia)} de ${meses[parseInt(mes,10)-1]} del ${anio}`;
   }
-
- 
-  generarContrato(reservacion: Reservacion) {
+    generarContrato(reservacion: Reservacion) {
+     
     const fechaFormateada = this.formatearFecha(reservacion.fecha);
+
+
+  const fechaFormateadaInicio = this.formatearFecha(reservacion.fecha);
+  const [horas, minutos] = (reservacion.horadeinicio ?? '13:00').split(':').map(Number);
+const horaDeInicioStr = `${horas.toString().padStart(2,'0')}:${minutos.toString().padStart(2,'0')}`;
+
+
+  
 
     const docDefinition: any = {
       content: [
@@ -599,19 +822,19 @@ export class ReservacionesComponent implements OnInit {
         { text: '\nCONTRATO DE RENTA DE INFLABLES',fontSize: 11, alignment: 'center'},
         { text: [
             'CONTRATO No: ', { text: `${reservacion.numerocontrato}`, bold: true, color: 'red' },
-            `   Fecha: ${fechaFormateada}`
+            `   Fecha: ${fechaFormateadaInicio}`
           ], margin:[0,10,0,10], fontSize:9, alignment:'justify'
         },
         { text: [
             'El (la) contratante ', { text: `${reservacion.cliente}`, bold:true },
             ' contrata el servicio de renta del(los) juego(s):\n', { text:`${reservacion.inflable}`, bold:true },
-            ' con sus accesorios para el día ', { text: fechaFormateada, bold:true },
-            ', en el lugar ubicado en:', { text:`${reservacion.domicilio}`, bold:true },
+            ' con sus accesorios para el día ', { text: fechaFormateadaInicio, bold:true },
+            ', en el lugar ubicado en: ', { text:`${reservacion.domicilio}`, bold:true },
             ', Teléfono ', { text:`${reservacion.telefono}`, bold:true },'.'
           ], margin:[0,10,0,5], fontSize:9, alignment:'justify'
         },
         { text: [
-            'El juego estará en renta desde las 13:00 horas del día ', { text: fechaFormateada, bold:true },
+            'El juego estará en renta desde las ', {text: horaDeInicioStr},' horas del día ', { text: fechaFormateadaInicio, bold:true },
             ' hasta el siguiente día a las 10:00 hrs., con un precio de: $', { text:`${reservacion.pago}`, bold:true }
           ], margin:[0,0,0,10], fontSize:9, alignment:'justify'
         },
@@ -703,7 +926,8 @@ export interface Reservacion {
   id?: string;
   cliente: string;
   telefono: string;
-  inflable: string;
+  inflable: string [];
   fecha: string;
+  horadeinicio: string;
   domicilio: string;
 }

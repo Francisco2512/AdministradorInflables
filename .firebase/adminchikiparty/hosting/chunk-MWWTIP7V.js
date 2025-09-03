@@ -1,0 +1,1 @@
+import{a as o}from"./chunk-C2Y4X3PX.js";import{d as e}from"./chunk-SFPUYBVI.js";import{E as t,sa as r}from"./chunk-6NT6WMN2.js";var h=(m,a)=>{let u=r(o),i=r(e);return u.currentUser.pipe(t(n=>n?!0:(i.navigate(["/login"]),!1)))};export{h as a};

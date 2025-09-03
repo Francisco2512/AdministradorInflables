@@ -1,91 +1,213 @@
-<h2>Crear Reservación</h2>
-<div class="col-12 col-sm-6 col-md-4 mb-3">
-  <form (ngSubmit)="editarId === null ? agregar() : actualizar()" class="formulario">
-    <input 
-      type="text" 
-      [(ngModel)]="nueva.numerocontrato" 
-      name="numerocontrato" 
-      placeholder="Número de contrato" 
-      required 
-    />
-
-    <input 
-      type="text" 
-      [(ngModel)]="nueva.cliente" 
-      name="cliente" 
-      placeholder="Cliente" 
-      required 
-    />
-
-    <input 
-  type="text" 
-  [(ngModel)]="nueva.telefono" 
-  name="telefono" 
-  placeholder="Teléfono" 
-  required 
-  maxlength="10"
-  pattern="[0-9]*"
-/>
-
-    <select [(ngModel)]="nueva.inflable" name="inflable" required>
-      <option value="" disabled selected>Selecciona un inflable</option>
-      <option *ngFor="let inflable of inflables" [value]="inflable.title">
-        {{ inflable.title }}
-      </option>
-    </select>
-
-    <input 
-      type="date" 
-      [(ngModel)]="nueva.fecha" 
-      name="fecha" 
-      required 
-    />
-
-    <input 
-      type="text" 
-      [(ngModel)]="nueva.domicilio" 
-      name="domicilio" 
-      placeholder="Domicilio (dirección)" 
-    />
-
-    <input 
-      type="text" 
-      [(ngModel)]="nueva.maps" 
-      name="maps" 
-      placeholder="Maps (link)" 
-    />
-
-    <input 
-      type="number" 
-      [(ngModel)]="nueva.pago" 
-      name="pago" 
-      placeholder="Pago" 
-    />
-
-    <button type="submit">
-      {{ editarId === null ? 'Agregar' : 'Actualizar' }}
-    </button>
-  </form>
+<div class="dashboard-cards mb-5">
+<div class="card total">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <span>Total Reservaciones</span>
+      <span class="icon-wrapper total">
+        <i class="bi bi-people"></i>
+      </span>
+    </div>
+    <h2 class="text-center">{{ reservaciones.length }}</h2>
+  </div>
 </div>
 
-<hr />
+<div class="card completadas">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <span>Completadas</span>
+      <span class="icon-wrapper completadas">
+        <i class="bi bi-check-circle"></i>
+      </span>
+    </div>
+    <h2 class="text-center">{{ contarCompletadas() }}</h2>
+  </div>
+</div>
 
-<h2>Próximos Eventos</h2>
-<div class="filtro-contenedor mb-3">
+<div class="card pendientes">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <span>Pendientes</span>
+      <span class="icon-wrapper pendientes">
+        <i class="bi bi-hourglass-split"></i>
+      </span>
+    </div>
+    <h2 class="text-center">{{ contarPendientes() }}</h2>
+  </div>
+</div>
+
+<div class="card ingresos shadow-sm border-1 rounded-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="fs-5 fw-semibold text-muted">Ingresos</span>
+      <i class="bi bi-coin fs-3 text-success"></i>
+    </div>
+    <div class="text-center mt-2">
+      <p class="mb-1">
+  <span class="text-muted">Estimados:</span>
+  <span class="fs-4 fw-bold text-primary">{{ totalIngresos() }}</span>
+</p>
+<p class="mb-0">
+  <span class="text-muted">Reales:</span>
+  <span class="fs-4 fw-bold text-success">{{ totalCompletados() }}</span>
+</p>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="filtros-container">
+  
+
+ <div class="input-busqueda-container position-relative">
   <input 
-    type="date" 
-    [(ngModel)]="filtroFecha" 
-    class="form-control filtro-fecha" 
+    type="text" 
+    [(ngModel)]="filtroBusqueda" 
+    class="form-control filtro-busqueda" 
+    placeholder="Buscar por contrato, cliente, teléfono o domicilio" 
   />
-  <button 
-    type="button" 
-    (click)="limpiarFiltro()" 
-    class="btn btn-secondary filtro-btn"
-  >
-    Limpiar
-  </button>
+  <i class="bi bi-search icono-busqueda"></i>
 </div>
 
+  <input type="date" [(ngModel)]="filtroFecha" class="form-control filtro-fecha" />
+
+  <div class="filtro-estado-container position-relative">
+  <select [(ngModel)]="filtroEstado" class="form-control filtro-estado">
+    <option value="">Todos</option>
+    <option value="pendiente">Pendientes</option>
+    <option value="completado">Completado</option>
+  </select>
+  <i class="bi bi-funnel position-absolute icono-filtro"></i>
+</div>
+
+  <button type="button" (click)="limpiarFiltro()" class="btn btn-secondary">Limpiar</button>
+  <button nz-button nzType="primary" class="boton-crear" (click)="showModal()">Crear Reservación</button>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="editarId === null ? 'Crear Reservación' : 'Actualizar Reservación'"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null"
+  [nzWidth]="800"
+>
+  <ng-container *nzModalContent>
+    <form (ngSubmit)="editarId === null ? agregar() : actualizar()" class="formulario">
+      <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="nueva.numerocontrato"
+            name="numerocontrato"
+            placeholder="Número de contrato"
+            required
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="nueva.cliente"
+            name="cliente"
+            placeholder="Cliente"
+            required
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="nueva.telefono"
+            name="telefono"
+            placeholder="Teléfono"
+            required
+            maxlength="10"
+            pattern="[0-9]*"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+          <nz-select
+            [(ngModel)]="nueva.inflable"
+            name="inflable"
+            nzPlaceHolder="Selecciona inflables"
+            nzMode="multiple"
+            nzShowSearch
+            nzAllowClear
+            style="width: 100%;"
+          >
+            <nz-option
+              *ngFor="let inflable of inflables"
+              [nzLabel]="inflable.title"
+              [nzValue]="inflable.title"
+            ></nz-option>
+          </nz-select>
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+          <input
+            type="date"
+            [(ngModel)]="nueva.fecha"
+            name="fecha"
+            required
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-md-6 mb-3">
+          <input
+            type="time"
+            [(ngModel)]="nueva.horadeinicio"
+            name="horadeinicio"
+            required
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="nueva.domicilio"
+            name="domicilio"
+            placeholder="Domicilio"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="nueva.maps"
+            name="maps"
+            placeholder="Maps (link)"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 mb-3">
+          <input
+            type="number"
+            [(ngModel)]="nueva.pago"
+            name="pago"
+            placeholder="Pago"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button nz-button nzType="default" type="button" (click)="handleCancel()">
+          Cerrar
+        </button>
+        <button nz-button nzType="primary" htmlType="submit">
+          {{ editarId === null ? 'Agregar' : 'Actualizar' }}
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
 <div class="tabla-responsive">
   <table class="table">
     <thead>
@@ -96,30 +218,46 @@
         <th>Inflable</th>
         <th>Fecha</th>
         <th>Domicilio</th>
-        <th>Maps</th>
         <th>Pago</th>
+        <th>Estatus</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let r of filtradasPorFecha()">
+      <tr *ngFor="let r of reservacionesFiltradas">
         <td>{{ r.numerocontrato }}</td>
         <td>{{ r.cliente }}</td>
         <td>{{ r.telefono }}</td>
         <td>{{ r.inflable }}</td>
         <td>{{ r.fecha | date: 'dd/MM/yyyy' }}</td>
         <td>{{ r.domicilio }}</td>
-        <td>
-          <a *ngIf="r.maps" [href]="r.maps" target="_blank">Ver mapa</a>
-        </td>
         <td>{{ r.pago }}</td>
-        <td>
-          <div class="d-flex gap-2">
-            <button type="button" (click)="eliminar(r.id!)" class="btn btn-danger btn-sm">Eliminar</button>
-            <button type="button" (click)="editar(r)" class="btn btn-warning btn-sm">Editar</button>
-            <button type="button" (click)="generarContrato(r)" class="btn btn-primary btn-sm">Contrato PDF</button>
-          </div>
-        </td>
+  <td>
+ <span 
+  [ngClass]="{
+    'estado-completado': esPasada(r.fecha),
+    'estado-pendiente': !esPasada(r.fecha)
+  }">
+  {{ esPasada(r.fecha) ? 'Completado' : 'Pendiente' }}
+</span>
+</td>
+<td class="actions-cell">
+  <button *ngIf="r.maps" type="button" (click)="abrirMapa(r.maps)" class="btn btn-success btn-sm">
+    <i class="bi bi-geo-alt"></i>
+  </button>
+
+  <button type="button" (click)="eliminar(r.id!)" class="btn btn-danger btn-sm">
+    <i class="bi bi-trash3"></i>
+  </button>
+
+  <button type="button" (click)="editar(r)" class="btn btn-warning btn-sm">
+    <i class="bi bi-pencil-square"></i>
+  </button>
+
+  <button type="button" (click)="generarContrato(r)" class="btn btn-primary btn-sm">
+    <i class="bi bi-file-earmark-arrow-down"></i>
+  </button>
+</td>
       </tr>
     </tbody>
   </table>

@@ -56,13 +56,23 @@ import { Reservacion } from './reservaciones.component';
 
 @Injectable({ providedIn: 'root' })
 export class ReservacionesService {
+ 
   private firestore = inject(Firestore);
   private coleccion: CollectionReference;
 
   constructor() {
     this.coleccion = collection(this.firestore, 'Reservaciones');
   }
-
+async actualizarEstado(id: string, nuevoEstado: string): Promise<void> {
+    try {
+      const docRef = doc(this.firestore, `Reservaciones/${id}`);
+      await updateDoc(docRef, { estado: nuevoEstado });
+      console.log('Estado actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el estado:', error);
+      throw error;
+    }
+  }
   async agregarfecha(data: any): Promise<{ data?: any; error?: any }> {
     let response: any = {};
     try {

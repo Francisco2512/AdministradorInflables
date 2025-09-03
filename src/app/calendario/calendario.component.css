@@ -1,4 +1,4 @@
-/* Estilo general del calendario */
+
 :host {
   display: block;
   max-width: 1400px;
@@ -10,10 +10,13 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
-
+:host ::ng-deep .fc-toolbar-title {
+  text-transform: uppercase;
+}
 .fc {
   font-size: 14px;
 }
+
 
 
 .fc .fc-event {

@@ -1,117 +1,205 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../login/login.service';
+import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, NgClass],
   template: `
 <nav class="navbar">
-  <div class="container">
-    <a class="logo" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <img src="/assets/logo.png"  class="logo-img" />
-    </a>
-    <ul class="nav-links">
-      <li routerLinkActive="active">
-        <a routerLink="/calendario">Calendario</a>
-      </li>
-      <li routerLinkActive="active">
-        <a routerLink="/reservaciones">Reservaciones</a>
-      </li>
-      <li routerLinkActive="active">
-        <a routerLink="/inflables">Gestión de Inflables</a>
-      </li>
-      <li>
-  <a (click)="logout()">Cerrar Sesión</a>
-</li>
-    </ul>
+  <div class="navbar-container">
+    <div class="nav-left-wrapper">
+      
+      <a class="logo" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <img src="/assets/logo.png" class="logo-img" />
+      </a>
+
+   
+      <button class="hamburguesa" (click)="toggleMenu()">
+        <i class="bi" [ngClass]="menuAbierto ? 'bi-x-lg' : 'bi-list'"></i>
+      </button>
+
+     
+      <div class="nav-left" [ngClass]="{'open': menuAbierto}">
+        <a routerLink="/calendario" routerLinkActive="active"> <i class="bi bi-calendar-event"></i> Calendario </a>
+        <a routerLink="/reservaciones" routerLinkActive="active"> <i class="bi bi-journal-check"></i> Reservaciones </a>
+        <a routerLink="/inflables" routerLinkActive="active"> <i class="bi bi-geo-alt"></i> Gestión de Inflables </a>
+      </div>
+    </div>
+</div>
+    
+    <div class="nav-right">
+      <a (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+      </a>
+    
   </div>
 </nav>
-
   `,styles: [`
-  .logo-img {
-    height: 160px;
-    width: auto;
-    display: flex;
-    align-items: center;
-    margin-right: auto;
-    
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  margin: 0;                   
+  padding: 4px 8px;         
+  background-color: rgba(255, 255, 255, 0.1); 
+  border-radius: 12px;        
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.logo:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.logo-img {
+  height: 80px;  
+  width: auto;       
+  object-fit: contain;
+  display: block;
+}
+
+
+.navbar {
+  background-color: #B875F7;
+  padding: 1rem 4rem;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.navbar-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between; 
+  padding: 0 1rem;
+}
+.logo-img {
+  height: clamp(40px, 10vw, 80px); 
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-left-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2rem; 
+}
+
+.nav-left {
+  display: flex; 
+  gap: 1rem;
+}
+
+.nav-left a {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 10px 20px;      
+  border-radius: 12px;     
+  font-size: 18px;        
+  font-weight: 900;
+  background-color: rgba(255,255,255,0.1); 
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.nav-left a:hover,
+.nav-left a.active {
+  background-color: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.nav-right a {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 10px 20px;      
+  border-radius: 12px;    
+  font-size: 18px;         
+  font-weight: 900;
+  background-color: rgba(255,255,255,0.1); 
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.nav-right a:hover {
+  background-color: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+
+.hamburguesa {
+  display: none; 
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  .hamburguesa {
+    display: block; 
+  }
+@media (max-width: 768px) {
+  .nav-left a {
+    width: 100%;              
+    justify-content: center; 
+    text-align: center;       
+    padding: 18px;          
+    font-size: 12px;          
+  }
+}
+  .nav-left {
+    display: none; 
+    flex-direction: column;
+    gap: 1rem;
+    position: absolute; 
+    top: 70px; 
+    left: 0;
+    right: 0;
+    background-color: #B875F7;
+    padding: 1rem;
+    border-radius: 0 0 12px 12px;
+    z-index: 100; 
   }
 
-  .navbar {
-    background-color: #007bff;
-    padding: 1rem 4rem;
-    color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  .nav-left.open {
+    display: flex; 
   }
 
-  .container {
-    max-width: 1200px; 
-    margin: 0 auto; 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .navbar-container {
+    position: relative;
   }
-
-  .logo {
-    font-weight: bold;
-    font-size: 2rem; 
-    color: white;
-    text-decoration: none;
-  }
-
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 3rem; 
-    margin: 0;
-    padding: 0;
-  }
-
-  .nav-links li a {
-    color: white;
-    text-decoration: none;
-    font-weight: 900; 
-    transition: color 0.3s ease, transform 0.3s ease;
-    font-size: 22px;
-  }
-
-  .nav-links li a:hover,
-  .nav-links li a.active {
-    color: #ffc107;
-    transform: scale(1.1);
-  }
-
-
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column;
-      padding: 1rem 2rem;
-    }
-
-    .nav-links {
-      gap: 1.5rem;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .nav-links li a {
-      font-size: 18px;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-    }
-  }
+}
 `]
 })
-export class NavbarComponent  {
+export class NavbarComponent implements OnInit {
+  menuAbierto = false;
+
   constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.menuAbierto = false;
+      }
+    });
+  }
+
+  toggleMenu() {
+    this.menuAbierto = !this.menuAbierto;
+  }
 
   async logout() {
     try {
-      await this.authService.logout(); 
-      this.router.navigate(['/login']); 
+      await this.authService.logout();
+      this.router.navigate(['/login']);
     } catch (error) {
       console.error('Error al cerrar sesión', error);
     }
