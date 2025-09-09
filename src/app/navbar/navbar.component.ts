@@ -22,9 +22,9 @@ import { NgClass } from '@angular/common';
 
      
       <div class="nav-left" [ngClass]="{'open': menuAbierto}">
+        <a routerLink="/inflables" routerLinkActive="active"> <i class="bi bi-geo-alt"></i> Gestión de Inflables </a>
         <a routerLink="/calendario" routerLinkActive="active"> <i class="bi bi-calendar-event"></i> Calendario </a>
         <a routerLink="/reservaciones" routerLinkActive="active"> <i class="bi bi-journal-check"></i> Reservaciones </a>
-        <a routerLink="/inflables" routerLinkActive="active"> <i class="bi bi-geo-alt"></i> Gestión de Inflables </a>
       </div>
     </div>
 </div>

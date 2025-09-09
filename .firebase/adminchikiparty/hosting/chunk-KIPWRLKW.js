@@ -1,0 +1,1 @@
+import{a as t}from"./chunk-37PUJWUQ.js";import"./chunk-IYGKZ2PH.js";import"./chunk-CRPHI63S.js";import"./chunk-FMWBJKOO.js";var n=[{path:"",loadComponent:()=>import("./chunk-EPWLZFEF.js").then(o=>o.ListaInflablesComponent),canActivate:[t]}];export{n as INFLABLES_ROUTES};

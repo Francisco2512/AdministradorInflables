@@ -57,3 +57,82 @@
   height: auto !important;
   text-align: center;
 }
+.modal-backdrop {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between; /* Título a la izquierda, tache a la derecha */
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.titulo-modal {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.btn-tache {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  color: #666;
+}
+
+.btn-tache:hover {
+  color: #000;
+}
+.btn-copiar {
+  margin-top: 1rem;
+  margin-right: 10px;
+  padding: 0.5rem 1rem;
+  border:none;
+  background:#4caf50;
+  color:#fff;
+  border-radius:6px;
+  cursor:pointer;
+}
+.btn-copiar:hover {
+  background:#388e3c;
+}
+.btn-cerrar-footer {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #f44336;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-cerrar-footer:hover {
+  background: #d32f2f;
+}
+.modal-footer-botones {
+  display: flex;
+  justify-content: flex-end; /* Alinea los botones a la derecha */
+  gap: 10px; /* Espacio entre los botones */
+  margin-top: 1rem; /* Separación del contenido del modal */
+}

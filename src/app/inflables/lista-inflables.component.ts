@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Injectable, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { ModalInflableService } from '../service/modal-inflable-service';
+import { map, Observable, of, tap } from 'rxjs';
 
 interface Detail {
   label: string;
@@ -54,5 +55,25 @@ abrirReservacion(inflable: string) {
         console.error('Error cargando inflables:', err);
       }
     );
+  }
+  
+}
+@Injectable({ providedIn: 'root' })
+export class InflablesService {
+  private http = inject(HttpClient);
+  private inflables: Inflable[] = [];
+
+  getInflables(): Observable<Inflable[]> {
+    if (this.inflables.length > 0) {
+      return of(this.inflables);
+    } else {
+      const url = 'https://us-central1-real-courses.cloudfunctions.net/getInflables';
+      return this.http.get<Inflable[]>(url).pipe(
+        map(data =>
+          data.map(e => ({ ...e, description: e.description.slice(0, 120) }))
+        ),
+        tap(data => (this.inflables = data))
+      );
+    }
   }
 }

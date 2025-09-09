@@ -1,1 +1,29 @@
 <full-calendar [options]="calendarOptions"></full-calendar>
+
+
+<div class="modal-backdrop" *ngIf="mostrarModal">
+  <div class="modal-container">
+    <div class="modal-header">
+    <h2>Detalles de la reservación</h2>
+    <button class="btn-tache" (click)="cerrarModal()">×</button>
+  </div>
+    
+    <p><b>Cliente:</b> {{ modalReservacion?.cliente }}</p>
+    <p><b>Teléfono:</b> {{ modalReservacion?.telefono }}</p>
+    <p><b>Inflables:</b> {{ inflablesArray.join(', ') }}</p>
+    <p><b>Fecha:</b> {{ modalReservacion?.fecha }}</p>
+    <p><b>Hora:</b> {{ modalReservacion?.horadeinicio }}</p>
+    <p><b>Domicilio:</b> {{ modalReservacion?.domicilio }}</p>
+    <p><b>Pago:</b> {{ modalReservacion?.pago }}</p>
+    <p><b>Maps:</b> {{ modalReservacion?.maps }}</p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+      <img *ngFor="let i of inflablesReservacion" [src]="i.thumb" [alt]="i.title"
+           style="max-width:120px; max-height:120px; border-radius:8px;">
+    </div>
+    <div class="modal-footer-botones">
+  <button (click)="copiarReservacion()" class="btn-copiar">Copiar info</button>
+  <button (click)="cerrarModal()" class="btn-cerrar-footer">Cerrar</button>
+</div>
+    
+  </div>
+</div>

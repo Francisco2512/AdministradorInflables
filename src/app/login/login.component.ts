@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.currentUser.subscribe(user => {
       if (user) {
-        this.router.navigate(['/reservaciones']);
+        this.router.navigate(['/inflables']);
       }
     });
   }
@@ -136,7 +136,7 @@ export class LoginComponent implements OnInit {
     try {
       await this.authService.login(this.user.email, this.user.password);
       this.errorMessage = '';
-      this.router.navigate(['/reservaciones']);
+      this.router.navigate(['/inflables']);
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       this.errorMessage = "Correo o contraseña incorrectos.";

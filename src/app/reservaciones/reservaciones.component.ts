@@ -570,21 +570,19 @@ generarNumeroContrato() {
     this.isVisible = false;
   }
 
-async cargarReservaciones(): Promise<void> {
-  try {
-    const data = await this.reservacionesServices.obtenerReservaciones();
-    this.reservaciones = data.map(r => ({
-      ...r,
-      inflable: Array.isArray(r.inflable) ? r.inflable : [r.inflable],
-      estado: r.estado || 'pendiente'
-    }));
-
-    this.actualizarEstadosAutomaticamente();
-  } catch (error) {
-    console.error('Error al cargar reservaciones', error);
-    Swal.fire('Error', 'No se pudieron cargar las reservaciones', 'error');
+  async cargarReservaciones(): Promise<void> {
+    try {
+      const data = await this.reservacionesServices.obtenerReservaciones();
+      this.reservaciones = data.map(r => ({
+        ...r,
+        inflable: Array.isArray(r.inflable) ? r.inflable : [r.inflable],
+        estado: r.estado || 'pendiente'
+      }));
+    } catch (error) {
+      console.error('Error al cargar reservaciones', error);
+      Swal.fire('Error', 'No se pudieron cargar las reservaciones', 'error');
+    }
   }
-}
   actualizarEstadosAutomaticamente() {
   const hoy = new Date();
   this.reservaciones.forEach(reservacion => {
@@ -607,6 +605,7 @@ async cargarReservaciones(): Promise<void> {
 abrirMapa(url: string) {
   window.open(url, '_blank');
 }
+
 marcarComoCompletado(reservacion: any) {
   if (reservacion.estado !== 'completado') {
     reservacion.estado = 'completado';
@@ -715,9 +714,23 @@ totalCompletados() {
 }
 esPasada(fecha: string): boolean {
   const hoy = new Date();
+  const fechaHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
   const fechaReservacion = new Date(fecha);
-  return fechaReservacion < hoy;
+  const fechaRes = new Date(
+    fechaReservacion.getFullYear(),
+    fechaReservacion.getMonth(),
+    fechaReservacion.getDate()
+  );
+
+  // Agregamos un día completo a la reservación
+  const fechaLimite = new Date(fechaRes);
+  fechaLimite.setDate(fechaRes.getDate() + 1);
+
+  // Se considera pasada solo si la fecha límite ya quedó atrás
+  return fechaLimite < fechaHoy;
 }
+
 
   async actualizar(): Promise<void> {
     if (!this.editarId) return;
