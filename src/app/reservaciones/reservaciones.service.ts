@@ -87,10 +87,11 @@ async actualizarEstado(id: string, nuevoEstado: string): Promise<void> {
     return response;
   }
 
-  async guardarReservacion(reservaciones: Reservacion): Promise<Reservacion> {
-    const docRef = await addDoc(this.coleccion, reservaciones);
-    return { ...reservaciones, id: docRef.id };
-  }
+  async guardarReservacion(reservacion: Reservacion): Promise<Reservacion> {
+  const { id, ...resto } = reservacion; // descartar id porque Firestore lo genera
+  const docRef = await addDoc(this.coleccion, resto);
+  return { ...resto, id: docRef.id };
+}
 
   async obtenerReservaciones(): Promise<Reservacion[]> {
     const snapshot = await getDocs(this.coleccion);

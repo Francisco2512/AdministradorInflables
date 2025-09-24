@@ -578,6 +578,7 @@ generarNumeroContrato() {
         inflable: Array.isArray(r.inflable) ? r.inflable : [r.inflable],
         estado: r.estado || 'pendiente'
       }));
+      this.actualizarEstadosAutomaticamente();
     } catch (error) {
       console.error('Error al cargar reservaciones', error);
       Swal.fire('Error', 'No se pudieron cargar las reservaciones', 'error');
@@ -777,10 +778,20 @@ get reservacionesFiltradas() {
       return coincidenciaBusqueda;
     })
     .filter(r => {
-  if (!this.filtroEstado) return true; 
+  // Si no hay filtro seleccionado → solo mostrar pendientes
+  if (!this.filtroEstado) {
+    return (r.estado || '').toLowerCase().trim() === 'pendiente';
+  }
+
+  // Si seleccionas "todos" → mostrar todo sin filtrar
+  if (this.filtroEstado.toLowerCase().trim() === 'todos') {
+    return true;
+  }
+
+  // Si seleccionas un estado específico → filtrar por ese estado
   const estadoSeleccionado = this.filtroEstado.toLowerCase().trim();
   const estadoReserva = (r.estado || '').toLowerCase().trim();
-  return estadoReserva.includes(estadoSeleccionado);
+  return estadoReserva === estadoSeleccionado;
 })
     .filter(r => {
       if (!this.filtroFecha) return true;
@@ -791,10 +802,15 @@ get reservacionesFiltradas() {
       const dd = String(fechaReservacion.getDate()).padStart(2, '0');
       return `${yyyy}-${mm}-${dd}` === this.filtroFecha;
     })
-   
-    .slice() 
-    .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    .slice()
+    .sort((a, b) => {
+      
+      if (a.estado === 'pendiente' && b.estado !== 'pendiente') return -1;
+      if (a.estado !== 'pendiente' && b.estado === 'pendiente') return 1;
+      return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+    });
 }
+
 
 limpiarFiltro() {
   this.filtroBusqueda = '';
